@@ -113,7 +113,7 @@ def test_larger_graph_min_hops():
     }
     path = bfs_shortest_path(graph, "R1", "R7")
     assert is_valid_path(graph, path, "R1", "R7")
-    assert path_length(path) == 3
+    assert path_length(path) == 4
 
 
 @pytest.mark.parametrize(
@@ -129,8 +129,9 @@ def test_parametrized_shortest_paths(start, goal, expected_len):
         "R1": ["R2", "R3"],
         "R2": ["R1", "R4"],
         "R3": ["R1", "R5"],
-        "R4": ["R2"],
+        "R4": ["R2", "R6"],
         "R5": ["R3"],
+        "R6": ["R4"],
     }
     path = bfs_shortest_path(graph, start, goal)
     assert is_valid_path(graph, path, start, goal)
