@@ -2,61 +2,54 @@ from collections import deque
 
 def bfs_shortest_path(graph, start, goal):
     """
-    Finds the shortest path between 'start' and 'goal' in an unweighted graph
-    using Breadth-First Search (BFS).
-
+    Finds the shortest path between start and goal in a graph using BFS.
+    
     Args:
-        graph (dict): The graph represented as an adjacency list.
-        start: The starting node.
-        goal: The destination node.
-
+        graph: A dictionary where keys are room names and values are lists of neighboring rooms.
+        start: The name of the starting room.
+        goal: The name of the target room.
+        
     Returns:
-        list: The shortest path from start to goal as a list of nodes, 
-              or an empty list if no path exists, or if start/goal are missing 
-              from the graph keys.
+        A list of rooms representing the shortest path from start to goal, 
+        or an empty list if no path exists or if start/goal are not in the graph.
     """
-
-    # --- Initial Checks for Missing or Trivial Nodes ---
-
-    # 1. If 'start' is not a key in the graph, we can't begin.
-    # Note: If start == goal, we check if it's a known node in the graph.
-    if start not in graph:
+    # 1. Check if start or goal are in the graph
+    if start not in graph or goal not in graph:
         return []
-
-    # 2. If 'goal' is not a key in the graph, we can't reach it.
-    if goal not in graph:
-        return []
-
-    # 3. Handle the trivial case where the start and goal are the same node.
+    
+    # Edge case: start is the goal
     if start == goal:
         return [start]
-    
-    # --- BFS Implementation ---
 
-    # Queue stores the paths explored so far (list of nodes). 
-    # Starts with the path containing only the start node.
-    queue = deque([[start]])
-    
-    # Keep track of visited nodes to prevent cycles and redundant work.
+    # 2. Initialize BFS structures
+    queue = deque([start])
     visited = {start}
-
+    parent = {start: None}
+    
+    found = False
+    
+    # 3. BFS Loop
     while queue:
-        # Dequeue the oldest path
-        path = queue.popleft()
-        node = path[-1] # The last node in the current path
+        current_room = queue.popleft()
         
-        # Explore neighbors
-        for neighbor in graph.get(node, []):
+        if current_room == goal:
+            found = True
+            break
+        
+        for neighbor in graph.get(current_room, []):
             if neighbor not in visited:
-                
-                # Check if the neighbor is the goal
-                if neighbor == goal:
-                    # Found the shortest path, return immediately
-                    return path + [neighbor]
-                
-                # If not the goal, mark as visited and enqueue the new path
                 visited.add(neighbor)
-                queue.append(path + [neighbor])
-
-    # If the queue is exhausted and the goal was never reached
-    return []
+                parent[neighbor] = current_room
+                queue.append(neighbor)
+    
+    # 4. Reconstruct path
+    if not found:
+        return []
+        
+    path = []
+    curr = goal
+    while curr is not None:
+        path.append(curr)
+        curr = parent[curr]
+        
+    return path[::-1]

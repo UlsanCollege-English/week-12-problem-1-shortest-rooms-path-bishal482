@@ -13,20 +13,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    # - name: tests
-    #   id: tests
-    #   uses: classroom-resources/autograding-python-grader@v1
-    #   with:
-    #     timeout: 10
-    #     setup-command: ''
     - name: tests
       id: tests
       uses: classroom-resources/autograding-python-grader@v1
       with:
         timeout: 10
-        setup-command: 'pip install pytest' # Ensure pytest is installed
-        # FIX: Explicitly run pytest and generate results.xml
-        run-command: 'pytest --junitxml=results.xml'
+        setup-command: ''
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
