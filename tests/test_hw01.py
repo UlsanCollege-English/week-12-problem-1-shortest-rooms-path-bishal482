@@ -130,8 +130,9 @@ def test_parametrized_shortest_paths(start, goal, expected_len):
         "R2": ["R1", "R4"],
         "R3": ["R1", "R5"],
         "R4": ["R2", "R6"],
-        "R5": ["R3"],
-        "R6": ["R4"],
+        "R5": ["R3", "R6"],
+        "R6": ["R4", "R5", "R7"],
+        "R7": ["R6"],
     }
     path = bfs_shortest_path(graph, start, goal)
     assert is_valid_path(graph, path, start, goal)
